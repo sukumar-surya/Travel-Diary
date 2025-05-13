@@ -25,3 +25,14 @@ export const addTravelStory = async (req, res, next) => {
         next(error)
     }
 }
+
+export const getAllTravelStory = async (req, res, next) => {
+    const userId = req.user.id;
+
+    try {
+        const travelStories = await TravelStory.find({ userId }).sort({ isFavourite: -1,})
+        res.status(200).json(travelStories);
+    } catch (error) {
+        next(error)
+    }
+} 
