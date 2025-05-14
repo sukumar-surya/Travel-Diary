@@ -1,5 +1,9 @@
+import { fileURLToPath } from "url";
 import TravelStory from "../models/travelStory.model.js";
 import errorHandler from "../utils/error.js";
+import path from "path";
+import fs from "fs";
+
 export const addTravelStory = async (req, res, next) => {
     const { title, story, visitedLocation, isFavourite, imageUrl, visitedDate } = req.body;
     const userId = req.user.id;
@@ -50,3 +54,32 @@ export const imageUpload = async (req, res, next) => {
         next(error)
     }
 }
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const rootDir = path.join(__dirname, "..");
+
+export const deleteImage = async (req, res, next) => {
+    const { imageUrl } = req.query;
+
+    if (!imageUrl) {
+        return next(errorHandler(400, "Image URL is required"));
+    }
+
+    try {
+        const filename = path.basename(imageUrl);
+
+        const filePath = path.join(rootDir, "uploads", filename);
+
+        if (!fs.existsSync(filePath)) {
+            return next(errorHandler(404, "Image not found"));
+        }
+
+        await fs.promises.unlink(filePath);
+
+        res.status(200).json({ message: "Image deleted successfully" });
+    } catch (error) {
+        next(error)
+    }
+}
+    
