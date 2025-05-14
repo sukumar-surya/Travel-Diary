@@ -4,6 +4,7 @@ import errorHandler from "../utils/error.js";
 import path from "path";
 import fs from "fs";
 
+
 export const addTravelStory = async (req, res, next) => {
     const { title, story, visitedLocation, isFavourite, imageUrl, visitedDate } = req.body;
     const userId = req.user.id;
@@ -82,4 +83,37 @@ export const deleteImage = async (req, res, next) => {
         next(error)
     }
 }
-    
+
+export const editTravelStory = async (req, res, next) => {
+    const { id } = req.params;
+    const { title, story, visitedLocation,imageUrl, visitedDate } = req.body; 
+    const userId = req.user.id;
+
+    if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+        return next(errorHandler(400, "All fields are required"));
+    }
+
+    const parsedVisitedDate = new Date(parseInt(visitedDate));
+
+    try {
+        const travelStory = await TravelStory.findOne({_id: id, userId:userId });
+
+        if (!travelStory) {
+            return next(errorHandler(404, "Travel story not found"));
+        }
+
+        const placeholderImageUrl = `http://localhost:3000/assets/placeholder.png`;
+
+        travelStory.title = title;
+        travelStory.story = story;
+        travelStory.visitedLocation = visitedLocation;
+        travelStory.imageUrl = imageUrl || placeholderImageUrl;
+        travelStory.visitedDate = parsedVisitedDate;
+
+        await travelStory.save();
+        res.status(200).json({ travelStory, message: "Travel story updated successfully" });
+        
+    } catch (error) {
+        next(error)
+    }
+}   
