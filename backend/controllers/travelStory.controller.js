@@ -96,7 +96,7 @@ export const editTravelStory = async (req, res, next) => {
     const parsedVisitedDate = new Date(parseInt(visitedDate));
 
     try {
-        const travelStory = await TravelStory.findOne({_id: id, userId:userId });
+        const travelStory = await TravelStory.findOne({_id: id, userId: userId });
 
         if (!travelStory) {
             return next(errorHandler(404, "Travel story not found"));
@@ -117,3 +117,33 @@ export const editTravelStory = async (req, res, next) => {
         next(error)
     }
 }   
+
+export const deleteTravelStory = async (req, res, next) => {
+    const {id} = req.params;
+    const userId = req.user.id;
+
+    try {
+        const travelStory = await TravelStory.findOne({_id: id, userId: userId });
+
+        if (!travelStory) {
+            return next(errorHandler(404, "Travel story not found"))
+        } 
+
+        await travelStory.deleteOne({ _id: id, userId: userId })
+
+        const imageUrl = travelStory.imageUrl;
+        const filename = path.basename(imageUrl);
+        const filePath = path.join(rootDir, 'uploads', filename);
+
+        if(!fs.existsSync(filePath)) {
+            return next(errorHandler(404, "Image not found"));
+        }
+
+        await fs.promises.unlink(filePath)
+
+        res.status(200).json({ message: "Travel story deleted successfully" })
+
+    } catch (error) {
+        next(error)     
+    }
+}
