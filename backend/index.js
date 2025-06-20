@@ -7,6 +7,7 @@ import userRoutes from './routes/user.route.js';
 import travelStoryRoutes from './routes/travelStory.route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -18,6 +19,11 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 
 const app = express();
 
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: ["GET","POST","PUT","DELETE"],
+    credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 
