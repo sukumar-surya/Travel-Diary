@@ -15,4 +15,10 @@ export const getUsers = async (req, res, next) => {
     res.status(200).json(others);
 }
 
-export default getUsers;
+export const signout = async (req, res, next) => {
+    try {
+        res.clearCookie("access_token").status(200).json("User signed out successfully");
+    } catch (error) {
+        next(error)
+    }
+}
