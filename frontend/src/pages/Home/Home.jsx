@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import { IoMdAdd } from 'react-icons/io'
 import Modal from 'react-modal'
 import AddEditTravelStory from '../../components/AddEditTravelStory'
+import ViewTravelStory from './viewTravelStory'
+
 
 const Home = () => {
   const [allStories, setAllStories] = React.useState([])
@@ -16,7 +18,10 @@ const Home = () => {
     type: 'add'
   })
 
-  
+  const [openViewModal, setOpenViewModal] = React.useState({
+    isShown: false,
+    data: null
+  })
 
   const getAllTravelStories = async () => {
     try {
@@ -32,7 +37,9 @@ const Home = () => {
 
   const handleEdit = async (data) => {}
 
-  const handleViewStory = async (data) => {}
+  const handleViewStory = (data) => {
+    setOpenViewModal({ isShown: true, data })
+  }
 
   const updateIsFavorite = async (storyData) => {
     const storyId = storyData._id
@@ -104,11 +111,28 @@ const Home = () => {
         },
       }}
       appElement={document.getElementById('root')}
-      className='w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50;'
+      className='w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50'
     >
       <AddEditTravelStory storyInfo={openAddEditModal.data} type={openAddEditModal.type} onClose={() => {
         setOpenAddEditModal({ isShown: false, data: null, type: 'add' })
       }} getAllTravelStories={getAllTravelStories}/>
+    </Modal>
+
+    <Modal 
+      isOpen={openViewModal.isShown}
+      onRequestClose={() => {}} 
+      style={{
+        overlay: {
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          zIndex: 999,
+        },
+      }}
+      appElement={document.getElementById('root')}
+      className='w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50;'
+    >
+      <ViewTravelStory storyInfo={openViewModal.data || null} onClose={() => {
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false}))
+      }} onEditClick={() => {}} onDeleteClick={() => {}} />
     </Modal>
 
     <button className='w-16 h-16 flex items-center justify-center rounded-full bg-[#05b6d3] hover:bg-cyan-400 fixed right-10 bottom-10' onClick={() => {

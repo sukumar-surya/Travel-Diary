@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PasswordInput from '../../components/PasswordInput'
 import { useNavigate } from 'react-router-dom'
-import axiosInstance from '../../utils/axiosinstance'
+import axiosInstance from '../../utils/axiosInstance'
 import { validateEmail } from '../../utils/helper'
 import { useDispatch, useSelector } from 'react-redux'
 

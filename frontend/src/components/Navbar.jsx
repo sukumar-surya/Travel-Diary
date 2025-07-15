@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Profile from './Profile'
-import axiosInstance from '../utils/axiosinstance'
+import axiosInstance from '../utils/axiosInstance'
 import { signOutSuccess } from '../redux/slice/userSlice'
 import { useDispatch } from 'react-redux'
 
