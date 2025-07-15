@@ -25,7 +25,7 @@ export const addTravelStory = async (req, res, next) => {
             visitedDate: parsedVisitedDate,
         });
         await travelStory.save();
-        res.status(201).json({travelStory, message: "Travel story added successfully"});
+        res.status(201).json({ story: travelStory, message: "Travel story added successfully"});
     } catch (error) {
         next(error)
     }
@@ -36,9 +36,9 @@ export const getAllTravelStory = async (req, res, next) => {
 
     try {
         const travelStories = await TravelStory.find({ userId }).sort({ isFavourite: -1,})
-        res.status(200).json(travelStories);
+        res.status(200).json({ stories: travelStories });
     } catch (error) {
-        next(error)
+        next(error);
     }
 } 
 

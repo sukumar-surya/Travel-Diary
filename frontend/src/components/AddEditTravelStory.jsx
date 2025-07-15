@@ -5,6 +5,10 @@ import { MdOutlineDelete } from "react-icons/md";
 import DateSelector from './DateSelector';
 import ImageSelector from './ImageSelector';
 import TagInput from './TagInput';
+import axiosInstance from '../utils/axiosInstance';
+import moment from 'moment';
+import { toast } from 'react-toastify';
+import uploadImage from '../utils/uploadImage';
 
 const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) => {
   const [visitedDate, setVisitedDate] = React.useState(null);
@@ -12,8 +16,59 @@ const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) =
   const [storyImg, setStoryImg] = React.useState(null);
   const [story, setStory] = React.useState('');
   const [visitedLocation, setVisitedLocation] = React.useState([]);
+  const [error, setError] = React.useState('');
 
-  const handleAddOrUpdateClick = () => {}
+  const addNewTravelStory = async () => {
+    try {
+      let imageUrl = '';
+
+      if (storyImg) {
+        const imgUploadRes = await uploadImage(storyImg);
+
+        imageUrl = imgUploadRes.imageUrl || '';
+      }
+
+      const response = await axiosInstance.post('/travel-story/add', {
+        title,
+        story,
+        imageUrl: imageUrl || '',
+        visitedLocation,
+        visitedDate: visitedDate ? moment(visitedDate).valueOf() : moment().valueOf()
+      })
+      
+
+      if (response.data && response.data.story) {
+        
+        toast.success('Travel story added successfully');
+
+        getAllTravelStories();
+
+        onClose();
+      }
+    } catch (error) {
+      console.log('Error uploading image');      
+    }
+  }
+
+  const updateTravelStory = async () => {}
+
+  const handleAddOrUpdateClick = () => {
+    if (!title) {
+      setError('Title is required');
+      return;
+    }
+    if (!story) {
+      setError('Story is required');
+      return;
+    }
+    setError('');
+
+    if (type === 'edit') {
+      updateTravelStory();
+    } else {
+      addNewTravelStory();
+    }
+  }
 
   const handleDeleteStoryImage = () => {}
   
@@ -28,8 +83,8 @@ const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) =
         
 
         {type === 'add' ? (
-          <button class='btn-small' onClick={handleAddOrUpdateClick}>
-          <IoMdAdd classname='text-lg' /> ADD STORY
+          <button className='btn-small' onClick={handleAddOrUpdateClick}>
+          <IoMdAdd className='text-lg' /> ADD STORY
         </button>
         ) : (
           <>
@@ -43,10 +98,14 @@ const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) =
           </>
         )}
 
-        <button class='' onClick={onClose}>
+        <button className='' onClick={onClose}>
           <IoMdClose className='text-xl text-slate-500 hover:bg-rose-500 hover:text-white' />
         </button>
         </div>
+
+        {error && (
+          <p className='text-red-500 text-xs pt-2 text-right'>{error}</p>
+        )}
       </div>
       <div>
         <div className='flex flex-1 flex-col gap-2 pt-4'>

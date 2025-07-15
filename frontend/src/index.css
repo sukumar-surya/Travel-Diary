@@ -16,7 +16,7 @@
 }
 
 .scrollbar::-webkit-scrollbar-track {
-    background: #f09ad3;
+    background: #ee75c6;
 }
 
 @layer components {

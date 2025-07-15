@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../../components/Navbar'
-import axiosInstance from '../../utils/axiosinstance'
+import axiosInstance from '../../utils/axiosInstance'
 import TravelStoryCard from '../../components/TravelStoryCard'
 import { ToastContainer, toast } from 'react-toastify'
 import { IoMdAdd } from 'react-icons/io'
@@ -15,6 +15,8 @@ const Home = () => {
     data: null,
     type: 'add'
   })
+
+  
 
   const getAllTravelStories = async () => {
     try {
@@ -105,7 +107,7 @@ const Home = () => {
       className='w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50;'
     >
       <AddEditTravelStory storyInfo={openAddEditModal.data} type={openAddEditModal.type} onClose={() => {
-        setOpenAddEditModal({ isShown: false, data: null })
+        setOpenAddEditModal({ isShown: false, data: null, type: 'add' })
       }} getAllTravelStories={getAllTravelStories}/>
     </Modal>
 
@@ -119,7 +121,6 @@ const Home = () => {
     <ToastContainer />
     </>
   )
-
 }
 
 export default Home
