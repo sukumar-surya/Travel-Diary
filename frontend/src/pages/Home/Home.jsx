@@ -35,7 +35,10 @@ const Home = () => {
     }
   }
 
-  const handleEdit = async (data) => {}
+  const handleEdit = async (data) => {
+    setOpenAddEditModal({ isShown: true, data, type: 'edit' })
+    
+  }
 
   const handleViewStory = (data) => {
     setOpenViewModal({ isShown: true, data })
@@ -130,9 +133,15 @@ const Home = () => {
       appElement={document.getElementById('root')}
       className='w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50;'
     >
-      <ViewTravelStory storyInfo={openViewModal.data || null} onClose={() => {
-        setOpenViewModal((prevState) => ({ ...prevState, isShown: false}))
-      }} onEditClick={() => {}} onDeleteClick={() => {}} />
+      <ViewTravelStory storyInfo={openViewModal.data || null} 
+      onClose={() => {
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
+      }} 
+      onEditClick={() => {
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
+        handleEdit(openViewModal.data || null)
+      }} 
+      onDeleteClick={() => {}} />
     </Modal>
 
     <button className='w-16 h-16 flex items-center justify-center rounded-full bg-[#05b6d3] hover:bg-cyan-400 fixed right-10 bottom-10' onClick={() => {

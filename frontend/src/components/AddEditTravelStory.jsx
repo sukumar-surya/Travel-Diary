@@ -11,11 +11,11 @@ import { toast } from 'react-toastify';
 import uploadImage from '../utils/uploadImage';
 
 const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) => {
-  const [visitedDate, setVisitedDate] = React.useState(null);
-  const [title, setTitle] = React.useState('');
-  const [storyImg, setStoryImg] = React.useState(null);
-  const [story, setStory] = React.useState('');
-  const [visitedLocation, setVisitedLocation] = React.useState([]);
+  const [visitedDate, setVisitedDate] = React.useState(storyInfo?.visitedDate || null);
+  const [title, setTitle] = React.useState(storyInfo?.title || '');
+  const [storyImg, setStoryImg] = React.useState(storyInfo?.imageUrl || null);
+  const [story, setStory] = React.useState(storyInfo?.story ||'');
+  const [visitedLocation, setVisitedLocation] = React.useState(storyInfo?.visitedLocation || []);
   const [error, setError] = React.useState('');
 
   const addNewTravelStory = async () => {
@@ -50,7 +50,44 @@ const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) =
     }
   }
 
-  const updateTravelStory = async () => {}
+  const updateTravelStory = async () => {
+    const storyId = storyInfo._id;
+
+    try {
+      let imageUrl = '';
+
+      let postData = {
+        title,
+        story,
+        imageUrl: storyInfo.imageUrl || '',
+        visitedLocation,
+        visitedDate: visitedDate ? moment(visitedDate).valueOf() : moment().valueOf()
+      }
+
+      if (typeof storyImg === 'object') {
+        const imageUploadRes = await uploadImage(storyImg);
+        imageUrl = imageUploadRes.imageUrl || '';
+        postData = { ...postData, imageUrl: imageUrl }
+      }
+
+      const response = await axiosInstance.post(`/travel-story/edit-story/${storyId}`, postData)
+
+      if (response.data && response.data.story) {
+        toast.success('Travel story updated successfully');
+
+        getAllTravelStories();
+
+        onClose();
+      }
+    
+    } catch (error) {
+      if(error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Error updating travel story');
+      }
+    }
+  }
 
   const handleAddOrUpdateClick = () => {
     if (!title) {
