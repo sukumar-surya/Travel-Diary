@@ -107,7 +107,36 @@ const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) =
     }
   }
 
-  const handleDeleteStoryImage = () => {}
+  const handleDeleteStoryImage = async () => {
+    const deleteImageResponse = await axiosInstance.delete('/travel-story/image-delete', {
+      params: {
+        imageUrl: storyInfo.imageUrl
+      }
+    })
+
+    if (deleteImageResponse.data) {
+      const storyId = storyInfo._id;
+
+      const postData = {
+        title,
+        story,
+        visitedLocation,
+        visitedDate: moment().valueOf(),
+        imageUrl: ''
+      }
+
+      const response = await axiosInstance.post(`/travel-story/edit-story/${storyId}`, postData)
+
+      if (response.data) {
+        toast.success('Story image deleted successfully');
+        
+        setStoryImg(null);
+
+        getAllTravelStories();
+      }
+      
+    }
+  }
   
   return (
     <div className='relative'>

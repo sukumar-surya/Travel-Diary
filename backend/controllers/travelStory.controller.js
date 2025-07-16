@@ -89,20 +89,20 @@ export const editTravelStory = async (req, res, next) => {
     const { title, story, visitedLocation,imageUrl, visitedDate } = req.body; 
     const userId = req.user.id;
 
-    if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+    if (!title || !story || !visitedLocation || !visitedDate) {
         return next(errorHandler(400, "All fields are required"));
     }
 
     const parsedVisitedDate = new Date(parseInt(visitedDate));
 
     try {
-        const travelStory = await TravelStory.findOne({_id: id, userId: userId });
+        const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
 
         if (!travelStory) {
-            return next(errorHandler(404, "Travel story not found"));
+            next(errorHandler(404, "Travel story not found"));
         }
 
-        const placeholderImageUrl = `http://localhost:3000/assets/placeholder.png`;
+        const placeholderImageUrl = `http://localhost:3000/backend/assets/placeholder.webp`;
 
         travelStory.title = title;
         travelStory.story = story;

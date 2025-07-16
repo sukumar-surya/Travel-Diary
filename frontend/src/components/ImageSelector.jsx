@@ -52,6 +52,7 @@ const ImageSelector = ({image, setImage, handleDeleteImage}) => {
       <p className="text-sm text-slate-500">Browse image files to upload</p>  
       </button> : (
         <div className="w-full relative">
+          
             <img src={previewUrl} alt="Selected" className='w-full h-[300px] object-cover rounded-lg' />
 
             <button className='btn-small btn-delete absolute top-2 right-2' onClick={handleRemoveImage}>
