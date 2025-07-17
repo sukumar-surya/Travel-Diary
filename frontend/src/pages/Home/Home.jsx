@@ -65,6 +65,24 @@ const Home = () => {
     }
   }
 
+  const deleteTravelStory = async (data) => {
+    const storyId = data._id
+
+    try {
+      const response = await axiosInstance.delete(`/travel-story/delete-story/${storyId}`)
+
+      if (response.data && !response.data.error) {
+        toast.success("Story deleted successfully!")
+
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
+
+        getAllTravelStories()
+      }
+    } catch (error) {
+      console.log('Error deleting travel story')
+    }
+  }
+
   React.useEffect(() => {
     getAllTravelStories()
     return () => {}
@@ -141,7 +159,9 @@ const Home = () => {
         setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
         handleEdit(openViewModal.data || null)
       }} 
-      onDeleteClick={() => {}} />
+      onDeleteClick={() => {
+        deleteTravelStory(openViewModal.data || null)
+      }} />
     </Modal>
 
     <button className='w-16 h-16 flex items-center justify-center rounded-full bg-[#05b6d3] hover:bg-cyan-400 fixed right-10 bottom-10' onClick={() => {

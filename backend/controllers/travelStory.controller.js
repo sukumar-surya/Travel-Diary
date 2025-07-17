@@ -102,7 +102,7 @@ export const editTravelStory = async (req, res, next) => {
             next(errorHandler(404, "Travel story not found"));
         }
 
-        const placeholderImageUrl = `http://localhost:3000/backend/assets/placeholder.webp`;
+        const placeholderImageUrl = `http://localhost:3000/assets/placeholderImg.svg`;
 
         travelStory.title = title;
         travelStory.story = story;
@@ -119,27 +119,30 @@ export const editTravelStory = async (req, res, next) => {
 }   
 
 export const deleteTravelStory = async (req, res, next) => {
-    const {id} = req.params;
+    const { id } = req.params;
     const userId = req.user.id;
 
     try {
-        const travelStory = await TravelStory.findOne({_id: id, userId: userId });
+        const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
 
         if (!travelStory) {
-            return next(errorHandler(404, "Travel story not found"))
+            next(errorHandler(404, "Travel story not found"))
         } 
 
         await travelStory.deleteOne({ _id: id, userId: userId })
 
+        const placeholderImageUrl = `http://localhost:3000/assets/placeholderImg.svg`;
+
         const imageUrl = travelStory.imageUrl;
-        const filename = path.basename(imageUrl);
-        const filePath = path.join(rootDir, 'uploads', filename);
 
-        if(!fs.existsSync(filePath)) {
-            return next(errorHandler(404, "Image not found"));
-        }
+        if (imageUrl && imageUrl !== placeholderImageUrl) {
+            const filename = path.basename(imageUrl);
+            const filePath = path.join(rootDir, "uploads", filename);
 
-        await fs.promises.unlink(filePath)
+            if (file.existsSync(filePath)) {
+                await fs.promises.unlink(filePath)
+            }
+        }      
 
         res.status(200).json({ message: "Travel story deleted successfully" })
 
