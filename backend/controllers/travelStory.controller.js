@@ -190,7 +190,7 @@ export const searchTravelStory = async (req, res, next) => {
             ],
         }).sort({ isFavourite: -1 });
 
-        res.status(200).json(searchResults);
+        res.status(200).json({ stories: searchResults });
     } catch (error) {
         next(error)
     }

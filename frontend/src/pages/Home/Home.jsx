@@ -7,10 +7,13 @@ import { IoMdAdd } from 'react-icons/io'
 import Modal from 'react-modal'
 import AddEditTravelStory from '../../components/AddEditTravelStory'
 import ViewTravelStory from './viewTravelStory'
+import EmptyCard from '../../components/EmptyCard'
 
 
 const Home = () => {
   const [allStories, setAllStories] = React.useState([])
+  const [searchQuery, setSearchQuery] = React.useState('')
+  const [filterType, setFilterType] = React.useState('')
 
   const [openAddEditModal, setOpenAddEditModal] = React.useState({
     isShown: false,
@@ -83,13 +86,35 @@ const Home = () => {
     }
   }
 
+  const onSearchStory = async (query) => {
+    try {
+      const response = await axiosInstance.get("/travel-story/search", {
+        params: {
+          query: query
+        }
+      })
+
+      if (response.data && response.data.stories) {
+        setFilterType('search')
+        setAllStories(response.data.stories)
+      }
+    } catch (error) {
+      console.log('Error searching stories')
+    }
+  }
+    
+  const handleClearSearch = () => {
+    setFilterType('')
+    getAllTravelStories()
+  }
+
   React.useEffect(() => {
     getAllTravelStories()
     return () => {}
   }, [])
   return (
     <>
-    <Navbar />
+    <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearchNote={onSearchStory} handleClearSearch={handleClearSearch}/>
 
     <div className='container mx-auto py-10'>
       <div className='flex gap-7'>
@@ -103,7 +128,7 @@ const Home = () => {
                     imageUrl={item.imageUrl}
                     title={item.title}
                     story={item.story}
-                    date={item.visitDate}
+                    date={item.visitedDate}
                     visitedLocation={item.visitedLocation}
                     isFavorite={item.isFavorite}
                     onEdit={() => handleEdit(item)}
@@ -114,7 +139,13 @@ const Home = () => {
               })}
             </div>
           ) : (
-            <div>Empty Card Here</div>
+            <EmptyCard 
+            imgSrc={"https://images.pexels.com/photos/5706021/pexels-photo-5706021.jpeg"}
+
+            message={`Start creating your first travel story! Click the button below to get started.`}
+
+            setOpenAddEditModal={() => setOpenAddEditModal({ isShown: true, data: null, type: 'add' })}
+             />
           )}
         </div>
             
