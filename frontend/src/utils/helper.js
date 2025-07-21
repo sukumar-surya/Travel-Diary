@@ -15,3 +15,12 @@ export const getInitials = (name) => {
     }
     return initials;
 }
+
+export const getEmptyCardMessage = (filterType) => {
+    switch (filterType) {
+        case 'search':
+            return 'No stories found for this search';
+        default:
+            return `Start creating your first travel story! Click the button below to get started.`
+    }
+}

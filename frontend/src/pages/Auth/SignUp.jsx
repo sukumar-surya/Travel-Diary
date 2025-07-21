@@ -14,7 +14,7 @@ const SignUp = () => {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [error, setError] = React.useState('')
-  const {loading} = useSelector((state) => state.user)
+  const {loading,currentUser} = useSelector((state) => state.user)
 
   const handleSignUp = async(e) => {e.preventDefault()
 
@@ -55,6 +55,12 @@ const SignUp = () => {
     }
   }
 
+  React.useEffect(() => {
+      if (!loading && currentUser) {
+        navigate('/')
+      }
+    }, [currentUser])
+
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
 
@@ -62,7 +68,7 @@ const SignUp = () => {
 
       <div className="container h-screen flex items-center justify-center px-20 mx-auto">
 
-        <div className="w-2/4 h-[90vh] flex items-end bg-[url('https://images.pexels.com/photos/731217/pexels-photo-731217.jpeg')] bg-cover bg-center rounded-lg p-10 z-50">
+        <div className="w-2/4 h-[90vh] flex items-end bg-[url('https://images.pexels.com/photos/33038661/pexels-photo-33038661.jpeg')] bg-cover bg-center rounded-lg p-10 z-50">
 
           <div>
             <h4 className='text-5xl text-white font-semibold leading-[58px]'> Create Your <br /> Travel Stories</h4>

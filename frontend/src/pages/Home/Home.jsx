@@ -8,6 +8,7 @@ import Modal from 'react-modal'
 import AddEditTravelStory from '../../components/AddEditTravelStory'
 import ViewTravelStory from './viewTravelStory'
 import EmptyCard from '../../components/EmptyCard'
+import { getEmptyCardMessage } from '../../utils/helper'
 
 
 const Home = () => {
@@ -47,19 +48,18 @@ const Home = () => {
     setOpenViewModal({ isShown: true, data })
   }
 
-  const updateIsFavorite = async (storyData) => {
+  const updateIsFavourite = async (storyData) => {
     const storyId = storyData._id
 
     try {
       const response = await axiosInstance.put(
-        `/travel-story/update-favorite/${storyId}`,
+        `/travel-story/update-favourite/${storyId}`,
         {
-          isFavorite: !storyData.isFavorite
+          isFavourite: !storyData.isFavourite
         }
       )
 
       if (response.data && response.data.story) {
-        toast.success("Story updated successfully!")
         getAllTravelStories()
       }
 
@@ -72,27 +72,28 @@ const Home = () => {
     const storyId = data._id
 
     try {
-      const response = await axiosInstance.delete(`/travel-story/delete-story/${storyId}`)
+      const response = await axiosInstance.delete(`/travel-story/delete-story/${storyId}`, {
+        params: {
+          imageUrl: data.imageUrl
+        }
+      });
+      console.log(response.data);
 
-      if (response.data && !response.data.error) {
-        toast.success("Story deleted successfully!")
+      if (response.data && response.data.success) {
+        toast.success("Travel story deleted successfully!")
 
         setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
 
         getAllTravelStories()
       }
     } catch (error) {
-      console.log('Error deleting travel story')
+      console.log('Error deleting travel story', error)
     }
   }
 
   const onSearchStory = async (query) => {
     try {
-      const response = await axiosInstance.get("/travel-story/search", {
-        params: {
-          query: query
-        }
-      })
+      const response = await axiosInstance.get("/travel-story/search")
 
       if (response.data && response.data.stories) {
         setFilterType('search')
@@ -120,7 +121,7 @@ const Home = () => {
       <div className='flex gap-7'>
         <div className='flex-1'>
           {allStories.length > 0 ? (
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-3 gap-4'>
               {allStories.map((item) => {
                 return (
                   <TravelStoryCard
@@ -130,10 +131,10 @@ const Home = () => {
                     story={item.story}
                     date={item.visitedDate}
                     visitedLocation={item.visitedLocation}
-                    isFavorite={item.isFavorite}
+                    isFavourite={item.isFavourite}
                     onEdit={() => handleEdit(item)}
                     onClick={() => handleViewStory(item)}
-                    onFavoriteClick={() => updateIsFavorite(item)}
+                    onFavouriteClick={() => updateIsFavourite(item)}
                   />
                 )
               })}
@@ -142,14 +143,14 @@ const Home = () => {
             <EmptyCard 
             imgSrc={"https://images.pexels.com/photos/5706021/pexels-photo-5706021.jpeg"}
 
-            message={`Start creating your first travel story! Click the button below to get started.`}
+            message={getEmptyCardMessage(filterType)}
 
             setOpenAddEditModal={() => setOpenAddEditModal({ isShown: true, data: null, type: 'add' })}
              />
           )}
         </div>
             
-        <div className='w-[320px]'></div>
+        <div></div>
       </div>
     </div>
 

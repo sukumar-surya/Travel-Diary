@@ -123,28 +123,28 @@ export const deleteTravelStory = async (req, res, next) => {
     const userId = req.user.id;
 
     try {
-        const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
+        const travelStory = await TravelStory.findOne({ _id: id, userId });
 
         if (!travelStory) {
-            next(errorHandler(404, "Travel story not found"))
+            return next(errorHandler(404, "Travel story not found"))
         } 
 
-        await travelStory.deleteOne({ _id: id, userId: userId })
-
-        const placeholderImageUrl = `http://localhost:3000/assets/placeholderImg.svg`;
+        await travelStory.deleteOne({ _id: id, userId })
 
         const imageUrl = travelStory.imageUrl;
+
+        const placeholderImageUrl = `http://localhost:3000/assets/placeholderImg.svg`;
 
         if (imageUrl && imageUrl !== placeholderImageUrl) {
             const filename = path.basename(imageUrl);
             const filePath = path.join(rootDir, "uploads", filename);
 
-            if (file.existsSync(filePath)) {
+            if (fs.existsSync(filePath)) {
                 await fs.promises.unlink(filePath)
             }
         }      
 
-        res.status(200).json({ message: "Travel story deleted successfully" })
+        res.status(200).json({ success: true, message: "Travel story deleted successfully" })
 
     } catch (error) {
         next(error)     
@@ -166,7 +166,7 @@ export const updateFavourite = async (req, res, next) => {
         travelStory.isFavourite = isFavourite;
         await travelStory.save();
 
-        res.status(200).json({ travelStory, message: "Travel story updated successfully" });
+        res.status(200).json({ story: travelStory, message: "Travel story updated successfully" });
     } catch (error) {
         next(error)   
     }
