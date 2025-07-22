@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const SignUp = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  
 
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')

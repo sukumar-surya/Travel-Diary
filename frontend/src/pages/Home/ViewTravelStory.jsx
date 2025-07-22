@@ -28,7 +28,7 @@ const ViewTravelStory = ({ storyInfo, onClose, onEditClick, onDeleteClick}) => {
       <div>
         <div className="flex flex-1 flex-col gap-2 py-4">
             <h1 className='text-2xl text-slate-950'>
-                {storyInfo && storyInfo.title}
+                {storyInfo && storyInfo.title ? storyInfo.title.charAt(0).toUpperCase() + storyInfo.title.slice(1) : ''}
             </h1>
 
             <div className="flex items-center justify-between gap-3">
@@ -39,7 +39,13 @@ const ViewTravelStory = ({ storyInfo, onClose, onEditClick, onDeleteClick}) => {
                 <div className="inline-flex items-center gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded-sm px-2 py-">
                     <FaLocationDot className='text-sm'/>
 
-                    {storyInfo && storyInfo.visitedLocation.map((item, index) => storyInfo.visitedLocation.length === index + 1 ? `${item}` : `${item},`)}
+                    {storyInfo && storyInfo.visitedLocation.map((item, index) => {
+                        const capitalized = item.charAt(0).toUpperCase() + item.slice(1);
+                        return storyInfo.visitedLocation.length === index + 1
+                        ? `${capitalized}`
+                        : `${capitalized},`;
+                    })
+                    }
                 </div>
             </div>
         </div>

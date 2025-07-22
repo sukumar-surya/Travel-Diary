@@ -93,7 +93,7 @@ const Home = () => {
 
   const onSearchStory = async (query) => {
     try {
-      const response = await axiosInstance.get("/travel-story/search")
+      const response = await axiosInstance.get(`/travel-story/search?query=${query}`)
 
       if (response.data && response.data.stories) {
         setFilterType('search')
@@ -127,10 +127,10 @@ const Home = () => {
                   <TravelStoryCard
                     key={item._id} 
                     imageUrl={item.imageUrl}
-                    title={item.title}
+                    title={item.title ? item.title.charAt(0).toUpperCase() + item.title.slice(1) : ''}
                     story={item.story}
                     date={item.visitedDate}
-                    visitedLocation={item.visitedLocation}
+                    visitedLocation={item.visitedLocation ? item.visitedLocation.map(loc => loc.charAt(0). toUpperCase() + loc.slice(1)) : []}
                     isFavourite={item.isFavourite}
                     onEdit={() => handleEdit(item)}
                     onClick={() => handleViewStory(item)}
