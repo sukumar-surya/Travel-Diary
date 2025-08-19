@@ -53,11 +53,12 @@ export const signin = async (req, res, next) => {
         
         const { password: pass, ...others } = user._doc;
 
-        res.status(200).cookie("access_token", token, {httpOnly: true}).json(others);
+        res.cookie("access_token", token, {httpOnly: true, secure: true, sameSite: "none"}).status(200).json(others);
         } catch (error) {
             next(error)
     }
 }
+
 
     
         
