@@ -104,7 +104,7 @@ export const editTravelStory = async (req, res, next) => {
         }
 
         const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
-        const placeholderImageUrl = `${baseUrl}/assets/placeholderImg.svg`;
+        const placeholderImageUrl = `${baseUrl}/assets/PlaceholderImg.svg`;
 
         travelStory.title = title;
         travelStory.story = story;
@@ -136,7 +136,7 @@ export const deleteTravelStory = async (req, res, next) => {
         const imageUrl = travelStory.imageUrl;
 
         const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
-        const placeholderImageUrl = `${baseUrl}/assets/placeholderImg.svg`;
+        const placeholderImageUrl = `${baseUrl}/assets/PlaceholderImg.svg`;
 
         if (imageUrl && imageUrl !== placeholderImageUrl) {
             const filename = path.basename(imageUrl);
