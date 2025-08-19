@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { IoMdAdd } from 'react-icons/io'
 import Modal from 'react-modal'
 import AddEditTravelStory from '../../components/AddEditTravelStory'
-import ViewTravelStory from './viewTravelStory'
+import ViewTravelStory from './ViewTravelStory'
 import EmptyCard from '../../components/EmptyCard'
 import { getEmptyCardMessage } from '../../utils/helper'
 
