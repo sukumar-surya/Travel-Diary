@@ -20,10 +20,14 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    methods: ["GET","POST","PUT","DELETE"],
-    credentials: true,
+    origin: [
+        "http://localhost:5173",         
+        "https://travel-diary-2iv3.vercel.app" 
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 
