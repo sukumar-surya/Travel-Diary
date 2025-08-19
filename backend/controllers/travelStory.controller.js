@@ -48,7 +48,8 @@ export const imageUpload = async (req, res, next) => {
             return next(errorHandler(400, "Please upload an image"));
         }
 
-        const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+        const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
+        const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
         res.status(201).json({ imageUrl });
     } catch (error) {
