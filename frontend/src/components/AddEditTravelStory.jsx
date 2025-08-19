@@ -46,7 +46,7 @@ const AddEditTravelStory = ({ storyInfo, type, onClose, getAllTravelStories }) =
         onClose();
       }
     } catch (error) {
-      console.log('Error uploading image');      
+      console.log('Error uploading travel story');      
     }
   }
 
