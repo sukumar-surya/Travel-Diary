@@ -103,7 +103,8 @@ export const editTravelStory = async (req, res, next) => {
             next(errorHandler(404, "Travel story not found"));
         }
 
-        const placeholderImageUrl = `http://localhost:3000/assets/placeholderImg.svg`;
+        const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
+        const placeholderImageUrl = `${baseUrl}/assets/placeholderImg.svg`;
 
         travelStory.title = title;
         travelStory.story = story;
@@ -117,7 +118,7 @@ export const editTravelStory = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-}   
+}  
 
 export const deleteTravelStory = async (req, res, next) => {
     const { id } = req.params;
@@ -134,7 +135,8 @@ export const deleteTravelStory = async (req, res, next) => {
 
         const imageUrl = travelStory.imageUrl;
 
-        const placeholderImageUrl = `http://localhost:3000/assets/placeholderImg.svg`;
+        const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
+        const placeholderImageUrl = `${baseUrl}/assets/placeholderImg.svg`;
 
         if (imageUrl && imageUrl !== placeholderImageUrl) {
             const filename = path.basename(imageUrl);
